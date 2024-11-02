@@ -35,6 +35,13 @@ export const translations = {
             records: 'Records',
             profile: 'Profile',
             language: 'Language'
+        },
+        chantai: {
+            chatHistory: 'Chat History',
+            noHistory: 'No chat history yet',
+            startConversation: 'Start a conversation with ChantAI',
+            typePlaceholder: 'Type a message...',
+            aiResponse: 'This is a simulated AI response.',
         }
     },
     ar: {
@@ -73,6 +80,13 @@ export const translations = {
             records: 'السجلات',
             profile: 'الملف الشخصي',
             language: 'اللغة'
+        },
+        chantai: {
+            chatHistory: 'سجل المحادثة',
+            noHistory: 'لا يوجد سجل محادثة بعد',
+            startConversation: 'ابدأ محادثة مع ChantAI',
+            typePlaceholder: 'اكتب رسالة...',
+            aiResponse: 'هذا رد محاكاة للذكاء الاصطناعي.',
         }
     },
     ckb: {
@@ -111,6 +125,13 @@ export const translations = {
             records: 'تۆمارەکان',
             profile: 'پرۆفایل',
             language: 'زمان'
+        },
+        chantai: {
+            chatHistory: 'مێژووی چات',
+            noHistory: 'هیچ مێژوویەکی چات نییە',
+            startConversation: 'دەستپێکردنی گفتوگۆ لەگەڵ ChantAI',
+            typePlaceholder: 'نامەیەک بنووسە...',
+            aiResponse: 'ئەمە وەڵامێکی خەیاڵی هۆشی دەستکردە.',
         }
     }
 }; 

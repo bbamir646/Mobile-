@@ -1,11 +1,14 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Keyboard, Platform } from 'react-native';
+import { useState, useEffect } from 'react';
 
 import HomeScreen from './HomeScreen';
 import {SearchScreen} from './SearchScreen';
 import {DoctorsScreen} from './DoctorsScreen';
-import {HealthRecordsScreen} from './HealthRecordsScreen';
+import {HealthRecordsScreen} from './ChatAi';
 import {ProfileScreen} from './ProfileScreen';
 import LanguageScreen from './LanguageScreen';
 
@@ -19,6 +22,7 @@ const Tab = createBottomTabNavigator();
 // Function to return icons based on the route name
 const getTabBarIcon = (routeName, focused) => {
     let iconName;
+    let IconComponent = Ionicons;
 
     switch (routeName) {
         case 'Home':
@@ -30,8 +34,9 @@ const getTabBarIcon = (routeName, focused) => {
         case 'Doctors':
             iconName = focused ? 'medkit' : 'medkit-outline';
             break;
-        case 'Health Records':
-            iconName = focused ? 'folder' : 'folder-outline';
+        case 'Records':
+            IconComponent = Icon;
+            iconName = focused ? 'robot' : 'robot-outline';
             break;
         case 'Profile':
             iconName = focused ? 'person' : 'person-outline';
@@ -40,7 +45,7 @@ const getTabBarIcon = (routeName, focused) => {
             iconName = 'home';
     }
 
-    return <Ionicons name={iconName} size={24} color={focused ? 'blue' : 'gray'} />;
+    return <IconComponent name={iconName} size={24} color={focused ? '#1a73e8' : 'gray'} />;
 };
 
 const App = () => {
@@ -48,6 +53,23 @@ const App = () => {
     const { currentLanguage } = useLanguage();
     const isLightTheme = theme === 'light';
     const t = translations[currentLanguage].navigation;
+    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+    useEffect(() => {
+        const keyboardWillShow = Keyboard.addListener(
+            Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+            () => setKeyboardVisible(true)
+        );
+        const keyboardWillHide = Keyboard.addListener(
+            Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+            () => setKeyboardVisible(false)
+        );
+
+        return () => {
+            keyboardWillShow.remove();
+            keyboardWillHide.remove();
+        };
+    }, []);
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -68,7 +90,7 @@ const App = () => {
                             shadowOpacity: 0.1,
                             shadowRadius: 2,
                             height: 70,
-                            display: route.name === 'Language' ? 'none' : 'flex',
+                            display: route.name === 'Language' || isKeyboardVisible ? 'none' : 'flex',
                         },
                         tabBarLabelStyle: {
                             fontSize: 12,
@@ -98,7 +120,10 @@ const App = () => {
                     <Tab.Screen 
                         name="Records" 
                         component={HealthRecordsScreen}
-                        options={{ tabBarLabel: t.records }}
+                        options={{ 
+                            tabBarLabel: t.records,
+                            tabBarIcon: ({ focused }) => getTabBarIcon('Records', focused)
+                        }}
                     />
                     <Tab.Screen 
                         name="Profile" 
