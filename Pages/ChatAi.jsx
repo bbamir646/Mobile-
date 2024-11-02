@@ -31,6 +31,8 @@ export const HealthRecordsScreen = () => {
 
   const typingAnimation = useRef(new Animated.Value(0)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(50)).current;
+  const messageAnimations = useRef({}).current;
 
   const t = translations[currentLanguage].chantai;
 
@@ -39,6 +41,22 @@ export const HealthRecordsScreen = () => {
     { code: 'ar', name: 'Arabic', nativeName: 'العربية' },
     { code: 'ckb', name: 'Kurdish-Sorani', nativeName: 'کوردی-سۆرانی' },
   ];
+
+  const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
+
+  const spinAnimation = useRef(new Animated.Value(0)).current;
+
+  const startSpinAnimation = () => {
+    spinAnimation.setValue(0);
+    Animated.loop(
+        Animated.timing(spinAnimation, {
+            toValue: 1,
+            duration: 1000,
+            easing: Easing.linear,
+            useNativeDriver: true
+        })
+    ).start();
+  };
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -53,13 +71,18 @@ export const HealthRecordsScreen = () => {
       Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
       (e) => {
         setKeyboardHeight(e.endCoordinates.height);
-        scrollToBottom();
+        if (messages.length > 0) {
+          scrollToLatest();
+        }
       }
     );
     const keyboardWillHide = Keyboard.addListener(
       Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
       () => {
         setKeyboardHeight(0);
+        if (messages.length > 0) {
+          scrollToLatest();
+        }
       }
     );
 
@@ -67,7 +90,7 @@ export const HealthRecordsScreen = () => {
       keyboardWillShow.remove();
       keyboardWillHide.remove();
     };
-  }, []);
+  }, [messages.length]);
 
   const toggleHistory = () => {
     setIsHistoryVisible(!isHistoryVisible);
@@ -106,31 +129,44 @@ export const HealthRecordsScreen = () => {
     typingAnimation.setValue(0);
   };
 
-  const scrollToBottom = (animated = true) => {
-    setTimeout(() => {
-      scrollViewRef.current?.scrollToEnd({ animated });
-    }, 100);
-  };
+  const scrollToLatest = () => {
+    if (messages.length > 0) {
+        scrollViewRef.current?.scrollToEnd({ animated: true });
+    }
+};
 
   const sendMessage = () => {
-    if (inputText.trim()) {
-      const userMessage = { text: inputText, isUser: true };
-      setMessages(prev => [...prev, userMessage]);
-      setInputText('');
-      scrollToBottom();
-      
-      startTypingAnimation();
-      
-      setTimeout(() => {
-        stopTypingAnimation();
-        setMessages(prev => [...prev, { 
-          text: t.aiResponse, 
-          isUser: false 
-        }]);
-        scrollToBottom();
-      }, 2000);
+    if (inputText.trim() && !isWaitingForResponse) {
+        setIsWaitingForResponse(true);
+        startSpinAnimation();
+        
+        const newMessage = {
+            id: Date.now().toString(),
+            text: inputText,
+            isUser: true
+        };
+        
+        setMessages(prev => [...prev, newMessage]);
+        animateNewMessage(newMessage.id);
+        setInputText('');
+        setIsTyping(true);
+
+        // Simulate AI response
+        setTimeout(() => {
+            setIsTyping(false);
+            const aiResponse = {
+                id: (Date.now() + 1).toString(),
+                text: "This is a simulated AI response.",
+                isUser: false
+            };
+            setMessages(prev => [...prev, aiResponse]);
+            animateNewMessage(aiResponse.id);
+            scrollToLatest();
+            setIsWaitingForResponse(false);
+            spinAnimation.stopAnimation();
+        }, 2000);
     }
-  };
+};
 
   // Add handler for Enter key
   const handleKeyPress = ({ nativeEvent }) => {
@@ -140,6 +176,94 @@ export const HealthRecordsScreen = () => {
     }
     return false;
   };
+
+  const animateNewMessage = (messageId) => {
+    if (!messageAnimations[messageId]) {
+        messageAnimations[messageId] = {
+            scale: new Animated.Value(0.9),
+            opacity: new Animated.Value(0)
+        };
+
+        Animated.parallel([
+            Animated.spring(messageAnimations[messageId].scale, {
+                toValue: 1,
+                useNativeDriver: true,
+                tension: 100,
+                friction: 8
+            }),
+            Animated.timing(messageAnimations[messageId].opacity, {
+                toValue: 1,
+                duration: 200,
+                useNativeDriver: true
+            })
+        ]).start();
+    }
+};
+
+  const renderMessage = (message) => (
+    <Animated.View
+        key={message.id}
+        style={[
+            styles.messageContainer,
+            message.isUser ? styles.userMessage : styles.aiMessage,
+            message.isError && styles.errorMessage,
+            { 
+                backgroundColor: isLightTheme 
+                    ? (message.isUser ? '#1a73e8' : message.isError ? '#ffebee' : '#f5f5f5')
+                    : (message.isUser ? '#64B5F6' : message.isError ? '#b71c1c' : '#2A2A2A'),
+                opacity: messageAnimations[message.id]?.opacity || 0,
+                transform: [{
+                    scale: messageAnimations[message.id]?.scale || 0.9
+                }]
+            }
+        ]}
+    >
+        {!message.isUser && (
+            <Icon 
+                name={message.isError ? "alert-circle" : "robot"}
+                size={20}
+                color={isLightTheme ? '#1a73e8' : '#64B5F6'}
+                style={styles.messageIcon}
+            />
+        )}
+        <Text style={[
+            styles.messageText,
+            { 
+                color: message.isUser 
+                    ? '#fff' 
+                    : (isLightTheme ? '#000' : '#fff')
+            }
+        ]}>
+            {message.text}
+        </Text>
+    </Animated.View>
+);
+
+  const typingAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (isTyping) {
+        const dots = Animated.loop(
+            Animated.sequence([
+                Animated.timing(typingAnim, {
+                    toValue: 1,
+                    duration: 500,
+                    useNativeDriver: true,
+                    easing: Easing.linear
+                }),
+                Animated.timing(typingAnim, {
+                    toValue: 0,
+                    duration: 500,
+                    useNativeDriver: true,
+                    easing: Easing.linear
+                })
+            ])
+        );
+        dots.start();
+
+        return () => dots.stop();
+    }
+}, [isTyping]);
 
   return (
     <View style={[styles.container, { backgroundColor: isLightTheme ? '#fff' : '#1A1A1A' }]}>
@@ -153,86 +277,88 @@ export const HealthRecordsScreen = () => {
           />
         </Pressable>
         <Text style={[styles.headerTitle, { color: isLightTheme ? '#1a73e8' : '#64B5F6' }]}>
-          ChantAI
+          ChatAI
         </Text>
-        <Pressable onPress={toggleLanguageModal} style={styles.languageButton}>
-          <Icon 
-            name="translate" 
-            size={24} 
-            color={isLightTheme ? '#1a73e8' : '#64B5F6'} 
-          />
-        </Pressable>
       </View>
 
       {/* Chat Container */}
-      <ScrollView 
+      <ScrollView
         ref={scrollViewRef}
         style={styles.chatContainer}
         contentContainerStyle={[
           styles.chatContent,
-          { paddingBottom: keyboardHeight > 0 ? keyboardHeight : 90 }
+          messages.length === 0 && styles.emptyContentContainer,
+          { paddingBottom: 90 }
         ]}
-        onContentSizeChange={() => scrollToBottom(false)}
         showsVerticalScrollIndicator={false}
       >
         {messages.length === 0 ? (
-          <View style={styles.emptyContainer}>
-            <Icon 
-              name="robot" 
-              size={100} 
-              color={isLightTheme ? '#1a73e8' : '#64B5F6'}
-              style={styles.robotIcon}
-            />
-            <Text style={[
-              styles.emptyText,
-              { color: isLightTheme ? '#666' : '#aaa' }
-            ]}>
-              {t.startConversation}
-            </Text>
-          </View>
+            <View style={styles.emptyStateContainer}>
+                <Icon 
+                    name="robot"
+                    size={80}
+                    color={isLightTheme ? '#1a73e8' : '#64B5F6'}
+                    style={styles.emptyStateIcon}
+                />
+                <Text style={[
+                    styles.emptyStateTitle,
+                    { color: isLightTheme ? '#000' : '#fff' }
+                ]}>
+                    How can I help you today?
+                </Text>
+                <Text style={[
+                    styles.emptyStateSubtitle,
+                    { color: isLightTheme ? '#666' : '#aaa' }
+                ]}>
+                    Ask me anything about your health records or medical questions
+                </Text>
+            </View>
         ) : (
-          messages.map((message, index) => (
-            <Animated.View 
-              key={index} 
-              entering={Animated.spring({ velocity: 10 })}
-              style={[
-                styles.messageContainer,
-                message.isUser ? styles.userMessage : styles.aiMessage,
-                { 
-                  backgroundColor: isLightTheme 
-                    ? (message.isUser ? '#1a73e8' : '#fff')
-                    : (message.isUser ? '#64B5F6' : '#2A2A2A')
-                }
-              ]}
-            >
-              <Text style={[
-                styles.messageText,
-                { color: message.isUser ? '#fff' : (isLightTheme ? '#000' : '#fff') }
-              ]}>
-                {message.text}
-              </Text>
-            </Animated.View>
-          ))
-        )}
-        {isTyping && (
-          <Animated.View 
-            style={[
-              styles.typingIndicator,
-              { 
-                backgroundColor: isLightTheme ? '#fff' : '#2A2A2A',
-                transform: [{ 
-                  translateY: typingAnimation.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0, -10]
-                  })
-                }]
-              }
-            ]}
-          >
-            <Text style={{ color: isLightTheme ? '#1a73e8' : '#64B5F6' }}>
-              ChatAI is typing...
-            </Text>
-          </Animated.View>
+            <>
+                {messages.map(renderMessage)}
+                {isTyping && (
+                    <Animated.View 
+                        style={[
+                            styles.typingIndicator,
+                            { 
+                                backgroundColor: isLightTheme ? '#f5f5f5' : '#2A2A2A',
+                                opacity: typingAnim.interpolate({
+                                    inputRange: [0, 0.5, 1],
+                                    outputRange: [0.4, 1, 0.4]
+                                }),
+                                transform: [{
+                                    translateY: typingAnim.interpolate({
+                                        inputRange: [0, 1],
+                                        outputRange: [0, -2]
+                                    })
+                                }]
+                            }
+                        ]}
+                    >
+                        <Icon 
+                            name="robot"
+                            size={18}
+                            color={isLightTheme ? '#1a73e8' : '#64B5F6'}
+                            style={styles.messageIcon}
+                        />
+                        <View style={{ flex: 1 }}>
+                            <Text style={{ 
+                                color: isLightTheme ? '#666' : '#aaa',
+                                fontSize: 14,
+                                flexShrink: 1
+                            }}>
+                                ChatAi typing
+                                <Animated.Text style={{
+                                    opacity: typingAnim.interpolate({
+                                        inputRange: [0, 0.5, 1],
+                                        outputRange: [0, 1, 0]
+                                    })
+                                }}>...</Animated.Text>
+                            </Text>
+                        </View>
+                    </Animated.View>
+                )}
+            </>
         )}
       </ScrollView>
 
@@ -240,35 +366,60 @@ export const HealthRecordsScreen = () => {
       <View style={[
         styles.inputContainer,
         { 
-          backgroundColor: isLightTheme ? '#fff' : '#2A2A2A',
+          backgroundColor: isLightTheme ? '#fff' : '#1A1A1A',
         }
       ]}>
         <TextInput
           style={[
             styles.input,
             { 
-              backgroundColor: isLightTheme ? '#f5f5f5' : '#1A1A1A',
-              color: isLightTheme ? '#000' : '#fff'
+              backgroundColor: isLightTheme ? '#f5f5f5' : '#2A2A2A',
+              color: isLightTheme ? '#000' : '#fff',
+              opacity: isWaitingForResponse ? 0.5 : 1 // Show disabled state
             }
           ]}
-          placeholder={t.typePlaceholder}
+          placeholder="Type a message..."
           placeholderTextColor={isLightTheme ? '#666' : '#aaa'}
           value={inputText}
           onChangeText={setInputText}
           multiline
+          editable={!isWaitingForResponse} // Disable input while waiting
         />
-        <Pressable 
+        <Pressable
           onPress={sendMessage}
+          disabled={isWaitingForResponse || !inputText.trim()}
           style={[
             styles.sendButton,
-            { opacity: inputText.trim() ? 1 : 0.5 }
+            { 
+              opacity: (!inputText.trim()) ? 0.5 : 1 ,
+              backgroundColor: isLightTheme ? '#f5f5f5' : '#2A2A2A',
+            }
           ]}
         >
-          <Icon 
-            name="send" 
-            size={24} 
-            color={isLightTheme ? '#1a73e8' : '#64B5F6'} 
-          />
+          {isWaitingForResponse ? (
+            <Animated.View
+              style={{
+                transform: [{
+                  rotate: spinAnimation.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ['0deg', '360deg']
+                  })
+                }]
+              }}
+            >
+              <Icon
+                name="loading"
+                size={24}
+                color={isLightTheme ? '#1a73e8' : '#64B5F6'}
+              />
+            </Animated.View>
+          ) : (
+            <Icon
+              name="send"
+              size={24}
+              color={isLightTheme ? '#1a73e8' : '#64B5F6'}
+            />
+          )}
         </Pressable>
       </View>
 
@@ -390,29 +541,42 @@ const styles = StyleSheet.create({
   },
   chatContent: {
     padding: 16,
-    paddingBottom: 90,
+  },
+  emptyContentContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   messageContainer: {
-    maxWidth: '80%',
+    maxWidth: '75%',
     padding: 12,
-    borderRadius: 20,
-    marginBottom: 8,
-    elevation: 2,
+    paddingHorizontal: 16,
+    borderRadius: 16,
+    marginBottom: 16,
+    marginHorizontal: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
+    elevation: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
   },
   userMessage: {
     alignSelf: 'flex-end',
     borderBottomRightRadius: 4,
+    marginLeft: 45,
   },
   aiMessage: {
     alignSelf: 'flex-start',
     borderBottomLeftRadius: 4,
+    marginRight: 45,
   },
   messageText: {
-    fontSize: 16,
+    fontSize: 15.5,
+    lineHeight: 21,
+    flexShrink: 1,
   },
   inputContainer: {
     position: 'absolute',
@@ -422,13 +586,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 16,
     alignItems: 'center',
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(0, 0, 0, 0.1)',
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
   },
   input: {
     flex: 1,
@@ -441,7 +598,6 @@ const styles = StyleSheet.create({
   sendButton: {
     padding: 12,
     borderRadius: 25,
-    backgroundColor: 'rgba(26, 115, 232, 0.1)',
   },
   languageButton: {
     padding: 8,
@@ -471,10 +627,47 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     opacity: 0.9,
   },
+  messageIcon: {
+    marginRight: 8,
+    opacity: 0.9,
+    size: 20,
+  },
   typingIndicator: {
-    alignSelf: 'flex-start',
     padding: 10,
-    borderRadius: 20,
-    marginBottom: 8,
+    paddingHorizontal: 14,
+    borderRadius: 16,
+    marginLeft: 10,
+    marginBottom: 16,
+    maxWidth: '50%',
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomLeftRadius: 4,
+  },
+  emptyStateContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  emptyStateIcon: {
+    marginBottom: 24,
+    opacity: 0.9,
+  },
+  emptyStateTitle: {
+    fontSize: 24,
+    fontWeight: '600',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  emptyStateSubtitle: {
+    fontSize: 16,
+    textAlign: 'center',
+    opacity: 0.8,
+    lineHeight: 22,
+  },
+  errorMessage: {
+    borderWidth: 1,
+    borderColor: '#ef5350',
   },
 });
