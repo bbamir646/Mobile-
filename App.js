@@ -1,13 +1,15 @@
-import s from './App.Style';
-import { ThemeProvider } from './DarkMode/ThemeContext'; // Import your ThemeProvider
+import { ThemeProvider } from './DarkMode/ThemeContext';
+import { LanguageProvider } from './DarkMode/LanguageContext';
 import Navigations from './Pages/Navigations';
 
 const App = () => {
-  return (
-      <ThemeProvider>
-        <Navigations/>
-      </ThemeProvider>
-  );
+    return (
+        <ThemeProvider>
+            <LanguageProvider>
+                <Navigations/>
+            </LanguageProvider>
+        </ThemeProvider>
+    );
 };
 
 export default App;

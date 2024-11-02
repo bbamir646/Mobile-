@@ -7,9 +7,12 @@ import {SearchScreen} from './SearchScreen';
 import {DoctorsScreen} from './DoctorsScreen';
 import {HealthRecordsScreen} from './HealthRecordsScreen';
 import {ProfileScreen} from './ProfileScreen';
+import LanguageScreen from './LanguageScreen';
 
-import {SafeAreaView} from "react-native";
+import {SafeAreaView, StatusBar} from "react-native";
 import {useTheme} from "../DarkMode/ThemeContext";
+import { useLanguage } from '../DarkMode/LanguageContext';
+import { translations } from '../translations';
 
 const Tab = createBottomTabNavigator();
 
@@ -41,44 +44,75 @@ const getTabBarIcon = (routeName, focused) => {
 };
 
 const App = () => {
-    const { theme } = useTheme(); // Access the current theme
-    const isLightTheme = theme === 'light'; // Determine if the current theme is light
+    const { theme } = useTheme();
+    const { currentLanguage } = useLanguage();
+    const isLightTheme = theme === 'light';
+    const t = translations[currentLanguage].navigation;
 
     return (
-        <SafeAreaView style={{ flex: 1, paddingTop: 30 }}>
+        <SafeAreaView style={{ flex: 1 }}>
+            <StatusBar backgroundColor={isLightTheme ? '#ffffff' : '#1a1a1a'} barStyle={isLightTheme ? 'dark-content' : 'light-content'}/>
             <NavigationContainer>
                 <Tab.Navigator
                     screenOptions={({ route }) => ({
-                        headerShown: false, // This hides the top header
+                        headerShown: false,
                         tabBarIcon: ({ focused }) => getTabBarIcon(route.name, focused),
-                        tabBarActiveTintColor: isLightTheme ? 'blue' : 'lightblue', // Change based on theme
-                        tabBarInactiveTintColor: isLightTheme ? 'gray' : 'darkgray', // Change based on theme
-
+                        tabBarActiveTintColor: isLightTheme ? 'blue' : 'lightblue',
+                        tabBarInactiveTintColor: isLightTheme ? 'gray' : 'darkgray',
                         tabBarStyle: {
-                            backgroundColor: isLightTheme ? '#f3f3f3' : '#333', // Change background based on theme
+                            backgroundColor: isLightTheme ? '#f3f3f3' : '#333',
                             borderTopWidth: 0,
-                            elevation: 5, // Add shadow on Android
-                            shadowColor: '#000', // Shadow color for iOS
+                            elevation: 5,
+                            shadowColor: '#000',
                             shadowOffset: { width: 0, height: 2 },
                             shadowOpacity: 0.1,
                             shadowRadius: 2,
                             height: 70,
+                            display: route.name === 'Language' ? 'none' : 'flex',
                         },
                         tabBarLabelStyle: {
                             fontSize: 12,
                             paddingBottom: 7,
-                            color: isLightTheme ? 'black' : 'white', // Change label color based on theme
+                            color: isLightTheme ? 'black' : 'white',
                         },
                         tabBarItemStyle: {
                             padding: 5,
                         },
                     })}
                 >
-                    <Tab.Screen name="Home" component={HomeScreen} />
-                    <Tab.Screen name="Doctors" component={DoctorsScreen} />
-                    <Tab.Screen name="Search" component={SearchScreen} />
-                    <Tab.Screen name="Records" component={HealthRecordsScreen} />
-                    <Tab.Screen name="Profile" component={ProfileScreen} />
+                    <Tab.Screen 
+                        name="Home" 
+                        component={HomeScreen}
+                        options={{ tabBarLabel: t.home }}
+                    />
+                    <Tab.Screen 
+                        name="Doctors" 
+                        component={DoctorsScreen}
+                        options={{ tabBarLabel: t.doctors }}
+                    />
+                    <Tab.Screen 
+                        name="Search" 
+                        component={SearchScreen}
+                        options={{ tabBarLabel: t.search }}
+                    />
+                    <Tab.Screen 
+                        name="Records" 
+                        component={HealthRecordsScreen}
+                        options={{ tabBarLabel: t.records }}
+                    />
+                    <Tab.Screen 
+                        name="Profile" 
+                        component={ProfileScreen}
+                        options={{ tabBarLabel: t.profile }}
+                    />
+                    <Tab.Screen 
+                        name="Language" 
+                        component={LanguageScreen}
+                        options={{ 
+                            headerShown: false,
+                            tabBarButton: () => null,
+                        }}
+                    />
                 </Tab.Navigator>
             </NavigationContainer>
         </SafeAreaView>
