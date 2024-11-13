@@ -20,7 +20,15 @@ export const translations = {
             version: 'Version'
         },
         doctors: {
-            welcome: 'Welcome to DoctorFinder!'
+            welcome: 'Welcome to DoctorFinder!',
+            loadingMap: 'Loading map...',
+            locationPermissionDenied: 'Permission to access location was denied',
+            bookAppointment: 'Book Appointment',
+            viewSchedule: 'View Schedule',
+            availableNow: 'Available Now',
+            nextAvailable: 'Next Available',
+            locationServicesDisabled: 'Location services are disabled. Please enable them in your device settings.',
+            locationError: 'Unable to get your location. Please check your connection and try again.',
         },
         search: {
             welcome: 'Welcome to DoctorFinder!'
@@ -65,7 +73,15 @@ export const translations = {
             version: 'الإصدار'
         },
         doctors: {
-            welcome: 'مرحباً بك في دكتور فايندر!'
+            welcome: 'مرحباً بك في دكتور فايندر!',
+            loadingMap: 'جاري تحميل الخريطة...',
+            locationPermissionDenied: 'تم رفض إذن الوصول إلى الموقع',
+            bookAppointment: 'احجز موعد',
+            viewSchedule: 'مشاهدة المواعيد',
+            availableNow: 'متاح الآن',
+            nextAvailable: 'المتاح التالي',
+            locationServicesDisabled: 'خدمات الموقع معطلة. يرجى تمكينها في إعدادات جهازك.',
+            locationError: 'تعذر الحصول على موقعك. يرجى التحقق من اتصالك والمحاولة مرة أخرى.',
         },
         search: {
             welcome: 'مرحباً بك في دكتور فايندر!'
@@ -110,7 +126,15 @@ export const translations = {
             version: 'وەشان'
         },
         doctors: {
-            welcome: 'بەخێربێیت بۆ دکتۆر فایندەر!'
+            welcome: 'بەخێربێیت بۆ دکتۆر فایندەر!',
+            loadingMap: 'نەخشە بارکردن...',
+            locationPermissionDenied: 'مۆڵەتی دەستگەیشتن بە شوێن ڕەتکرایەوە',
+            bookAppointment: 'بەخێربێیت بۆ دکتۆر فایندەر!',
+            viewSchedule: 'نەخشە بارکردن...',
+            availableNow: 'بەخێربێیت بۆ دکتۆر فایندەر!',
+            nextAvailable: 'نەخشە بارکردن...',
+            locationServicesDisabled: 'خزمەتگوزاریەکانی شوێن ناچالاکن. تکایە لە ڕێکخستنەکانی ئامێرەکەت چالاکی بکە.',
+            locationError: 'ناتوانرێت شوێنەکەت بەدەست بهێنرێت. تکایە پەیوەندیەکەت بپشکنە و دووبارە هەوڵ بدەرەوە.',
         },
         search: {
             welcome: 'بەخێربێیت بۆ دکتۆر فایندەر!'
