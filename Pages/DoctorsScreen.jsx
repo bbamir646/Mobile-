@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity, Platform ,StatusBar} from 'react-native';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_DEFAULT, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { useTheme } from "../DarkMode/ThemeContext";
 import { useLanguage } from '../DarkMode/LanguageContext';
@@ -25,8 +25,8 @@ export const DoctorsScreen = () => {
             name: 'Dr. Sarah Johnson',
             specialty: 'Cardiologist',
             coordinate: {
-                latitude: 36.196819,
-                longitude:  44.001656
+                latitude: 36.094306 + (Math.random() - 0.5) * 0.01,
+                longitude: 44.649964 + (Math.random() - 0.5) * 0.01
             },
             rating: 4.8,
             isAvailable: true,
@@ -40,8 +40,8 @@ export const DoctorsScreen = () => {
             name: 'Dr. Michael Chen',
             specialty: 'Pediatrician',
             coordinate: {
-                latitude: 36.1950,
-                longitude: 43.9940
+                latitude: 36.095706 + (Math.random() - 0.5) * 0.01,
+                longitude: 44.653541 + (Math.random() - 0.5) * 0.01
             },
             rating: 4.9,
             isAvailable: false,
@@ -50,37 +50,69 @@ export const DoctorsScreen = () => {
             address: '456 Healthcare Ave.',
             nextAvailable: 'Tomorrow 10:00 AM'
         },
+        {
+            id: 3,
+            name: 'Dr. Emily Rodriguez',
+            specialty: 'Dermatologist',
+            coordinate: {
+                latitude: 36.093506 + (Math.random() - 0.5) * 0.01,
+                longitude: 44.651964 + (Math.random() - 0.5) * 0.01
+            },
+            rating: 4.7,
+            isAvailable: true,
+            experience: '10 years',
+            image: require('../assets/images/2.jpg'),
+            address: '789 Skin Care Center',
+            nextAvailable: '3:45 PM Today'
+        },
+        {
+            id: 4,
+            name: 'Dr. James Wilson',
+            specialty: 'Orthopedist',
+            coordinate: {
+                latitude: 36.096106 + (Math.random() - 0.5) * 0.01,
+                longitude: 44.650541 + (Math.random() - 0.5) * 0.01
+            },
+            rating: 4.9,
+            isAvailable: true,
+            experience: '15 years',
+            image: require('../assets/images/4.jpg'),
+            address: '321 Bone & Joint Clinic',
+            nextAvailable: '1:15 PM Today'
+        }
     ]);
+
+    const mapRef = useRef(null);
 
     useEffect(() => {
         (async () => {
             try {
-                // First check if location services are enabled
-                const providerStatus = await Location.hasServicesEnabledAsync();
-                
-                if (!providerStatus) {
-                    setErrorMsg(t.locationServicesDisabled);
-                    return;
-                }
-
-                // Then request permissions
                 let { status } = await Location.requestForegroundPermissionsAsync();
                 if (status !== 'granted') {
                     setErrorMsg(t.locationPermissionDenied);
                     return;
                 }
 
-                // Get location with timeout and error handling
-                const location = await Promise.race([
-                    Location.getCurrentPositionAsync({
-                        accuracy: Location.Accuracy.Balanced,
-                    }),
-                    new Promise((_, reject) => 
-                        setTimeout(() => reject(new Error('Timeout')), 10000)
-                    )
-                ]);
+                // Get location with better error handling
+                const locationResult = await Location.getCurrentPositionAsync({
+                    accuracy: Location.Accuracy.Balanced,
+                    timeout: 15000,
+                }).catch(error => {
+                    console.log('Location error:', error);
+                    throw new Error(t.locationError);
+                });
 
-                setLocation(location);
+                console.log('Location received:', locationResult);
+                setLocation(locationResult);
+
+                // Log the calculated region
+                const region = getInitialRegion(locationResult);
+                console.log('Initial region:', region);
+
+                // Animate to user location if map ref exists
+                if (mapRef.current && locationResult) {
+                    mapRef.current.animateToRegion(region, 1000);
+                }
             } catch (error) {
                 console.log('Location error:', error);
                 setErrorMsg(t.locationError);
@@ -91,63 +123,193 @@ export const DoctorsScreen = () => {
     const mapStyle = isLightTheme ? [] : [
         {
             "elementType": "geometry",
-            "stylers": [{ "color": "#242f3e" }]
+            "stylers": [{"color": "#242f3e"}]
         },
         {
             "elementType": "labels.text.fill",
-            "stylers": [{ "color": "#746855" }]
+            "stylers": [{"color": "#ffffff"}]
         },
-        // Add more dark mode styling as needed
+        {
+            "elementType": "labels.text.stroke",
+            "stylers": [{"color": "#242f3e"}]
+        },
+        {
+            "featureType": "administrative.locality",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#ffffff"}]
+        },
+        {
+            "featureType": "administrative.neighborhood",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#ffffff"}]
+        },
+        {
+            "featureType": "poi",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#ffffff"}]
+        },
+        {
+            "featureType": "poi.park",
+            "elementType": "geometry",
+            "stylers": [{"color": "#263c3f"}]
+        },
+        {
+            "featureType": "poi.park",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#6b9a76"}]
+        },
+        {
+            "featureType": "road",
+            "elementType": "geometry",
+            "stylers": [{"color": "#38414e"}]
+        },
+        {
+            "featureType": "road",
+            "elementType": "geometry.stroke",
+            "stylers": [{"color": "#212a37"}]
+        },
+        {
+            "featureType": "road",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#ffffff"}]
+        },
+        {
+            "featureType": "road.highway",
+            "elementType": "geometry",
+            "stylers": [{"color": "#746855"}]
+        },
+        {
+            "featureType": "road.highway",
+            "elementType": "geometry.stroke",
+            "stylers": [{"color": "#1f2835"}]
+        },
+        {
+            "featureType": "road.highway",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#ffffff"}]
+        },
+        {
+            "featureType": "transit",
+            "elementType": "geometry",
+            "stylers": [{"color": "#2f3948"}]
+        },
+        {
+            "featureType": "transit.station",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#ffffff"}]
+        },
+        {
+            "featureType": "water",
+            "elementType": "geometry",
+            "stylers": [{"color": "#17263c"}]
+        },
+        {
+            "featureType": "water",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#ffffff"}]
+        },
+        {
+            "featureType": "water",
+            "elementType": "labels.text.stroke",
+            "stylers": [{"color": "#17263c"}]
+        }
     ];
 
-    const renderMarker = (doctor) => (
-        <Marker
-            key={doctor.id}
-            identifier={`doctor-${doctor.id}`}
-            coordinate={doctor.coordinate}
-            title={doctor.name}
-            description={doctor.specialty}
-            onPress={() => setSelectedDoctor(doctor)}
-        >
-            <View style={styles.markerContainer} pointerEvents="none">
-                <View style={[
-                    styles.markerBubble,
-                    { backgroundColor: isLightTheme ? '#fff' : '#333' }
-                ]}>
-                    <Image
-                        source={doctor.image}
-                        style={styles.markerImage}
-                        resizeMode="cover"
-                    />
-                    <View style={[
-                        styles.availabilityDot,
-                        { backgroundColor: doctor.isAvailable ? '#4CAF50' : '#FF5252' }
-                    ]} />
-                </View>
-            </View>
-        </Marker>
-    );
+    const getInitialRegion = (userLocation) => {
+        if (!userLocation) return null;
+        
+        // Calculate the center of all points (user location + doctors)
+        let minLat = userLocation.coords.latitude;
+        let maxLat = userLocation.coords.latitude;
+        let minLng = userLocation.coords.longitude;
+        let maxLng = userLocation.coords.longitude;
+        
+        doctors.forEach(doctor => {
+            minLat = Math.min(minLat, doctor.coordinate.latitude);
+            maxLat = Math.max(maxLat, doctor.coordinate.latitude);
+            minLng = Math.min(minLng, doctor.coordinate.longitude);
+            maxLng = Math.max(maxLng, doctor.coordinate.longitude);
+        });
+        
+        const centerLat = (minLat + maxLat) / 2;
+        const centerLng = (minLng + maxLng) / 2;
+        
+        // Add some padding to the deltas
+        const latDelta = (maxLat - minLat) * 1.5 || 0.0922;
+        const lngDelta = (maxLng - minLng) * 1.5 || 0.0421;
+        
+        return {
+            latitude: centerLat,
+            longitude: centerLng,
+            latitudeDelta: Math.max(latDelta, 0.0922),
+            longitudeDelta: Math.max(lngDelta, 0.0421),
+        };
+    };
 
     return (
         <View style={styles.container}>
         <StatusBar backgroundColor={isLightTheme ? '#ffffff' : '#1a1a1a'} barStyle={isLightTheme ? 'dark-content' : 'light-content'}/>
           
-            {location ? (
+            {location && doctors.length > 0 ? (
                 <>
                     <MapView
-                        provider={PROVIDER_GOOGLE}
+                        ref={mapRef}
+                        provider={Platform.OS === 'ios' ? PROVIDER_DEFAULT : PROVIDER_GOOGLE}
                         style={styles.map}
                         customMapStyle={mapStyle}
                         initialRegion={{
-                            latitude: location.coords.latitude,
-                            longitude: location.coords.longitude,
+                            latitude: 36.094306,
+                            longitude: 44.649964,
                             latitudeDelta: 0.0922,
                             longitudeDelta: 0.0421,
                         }}
+                        region={getInitialRegion(location)}
                         showsUserLocation={true}
                         showsMyLocationButton={true}
+                        showsCompass={true}
+                        loadingEnabled={true}
+                        loadingIndicatorColor="#1a73e8"
+                        loadingBackgroundColor={isLightTheme ? "#ffffff" : "#333333"}
+                        onMapReady={() => {
+                            console.log('Map is ready');
+                        }}
+                        onRegionChangeComplete={(region) => {
+                            console.log('Region changed:', region);
+                        }}
                     >
-                        {doctors.map((doctor) => renderMarker(doctor))}
+                        {doctors.map((doctor) => {
+                            console.log('Rendering doctor marker:', doctor);
+                            return (
+                                <Marker
+                                    key={doctor.id}
+                                    identifier={`doctor-${doctor.id}`}
+                                    coordinate={doctor.coordinate}
+                                    title={doctor.name}
+                                    description={doctor.specialty}
+                                    onPress={() => {
+                                        console.log('Marker pressed:', doctor);
+                                        setSelectedDoctor(doctor);
+                                    }}
+                                >
+                                    <View style={styles.markerContainer} pointerEvents="none">
+                                        <View style={[
+                                            styles.markerBubble,
+                                            { backgroundColor: isLightTheme ? '#fff' : '#333' }
+                                        ]}>
+                                            <Image
+                                                source={doctor.image}
+                                                style={styles.markerImage}
+                                                resizeMode="cover"
+                                            />
+                                            <View style={[
+                                                styles.availabilityDot,
+                                                { backgroundColor: doctor.isAvailable ? '#4CAF50' : '#FF5252' }
+                                            ]} />
+                                        </View>
+                                    </View>
+                                </Marker>
+                            );
+                        })}
                     </MapView>
                     
                     {selectedDoctor && (
@@ -221,7 +383,7 @@ export const DoctorsScreen = () => {
                         styles.loadingText,
                         { color: isLightTheme ? '#333' : '#fff' }
                     ]}>
-                        {errorMsg || t.loadingMap}
+                        {errorMsg || (doctors.length === 0 ? 'No doctors found' : t.loadingMap)}
                     </Text>
                 </View>
             )}
@@ -232,15 +394,30 @@ export const DoctorsScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        position: 'relative',
     },
     map: {
-        width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height,
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
     },
     markerContainer: {
         alignItems: 'center',
-        width: 40,
-        height: 40,
+        width: 36,
+        height: 36,
+        ...Platform.select({
+            ios: {
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+            },
+            android: {
+                elevation: 5,
+            },
+        }),
     },
     markerBubble: {
         padding: 4,
@@ -356,5 +533,3 @@ const styles = StyleSheet.create({
         fontWeight: '600',
     },
 });
-
-

@@ -31,14 +31,28 @@ export const translations = {
             locationError: 'Unable to get your location. Please check your connection and try again.',
         },
         search: {
-            welcome: 'Welcome to DoctorFinder!'
+            welcome: 'Welcome to DoctorFinder!',
+            searchPlaceholder: 'Search doctors, specialties...',
+            filters: {
+                all: 'All',
+                available: 'Available',
+                topRated: 'Top Rated',
+                nearest: 'Nearest',
+                title: 'Filter Results',
+                specialty: 'Specialty',
+                availability: 'Availability',
+                rating: 'Rating',
+                distance: 'Distance',
+                apply: 'Apply Filters',
+                reset: 'Reset'
+            }
         },
         records: {
             welcome: 'Welcome to DoctorFinder!'
         },
         navigation: {
             home: 'Home',
-            doctors: 'Doctors',
+            doctors: 'Map',
             search: 'Search',
             records: 'ChatAi',
             profile: 'Profile',
@@ -84,14 +98,28 @@ export const translations = {
             locationError: 'تعذر الحصول على موقعك. يرجى التحقق من اتصالك والمحاولة مرة أخرى.',
         },
         search: {
-            welcome: 'مرحباً بك في دكتور فايندر!'
+            welcome: 'مرحباً بك في دكتور فايندر!',
+            searchPlaceholder: 'ابحث عن الأطباء والتخصصات...',
+            filters: {
+                all: 'الكل',
+                available: 'متاح الآن',
+                topRated: 'الأعلى تصنيفاً',
+                nearest: 'الأقرب',
+                title: 'تصفية النتائج',
+                specialty: 'التخصص',
+                availability: 'التوفر',
+                rating: 'التصنيف',
+                distance: 'المسافة',
+                apply: 'تطبيق التصفية',
+                reset: 'إعادة تعيين'
+            }
         },
         records: {
             welcome: 'مرحباً بك في دكتور فايندر!'
         },
         navigation: {
             home: 'الرئيسية',
-            doctors: 'الأطباء',
+            doctors: 'الخريطة',
             search: 'البحث',
             records: 'السجلات',
             profile: 'الملف الشخصي',
@@ -137,14 +165,28 @@ export const translations = {
             locationError: 'ناتوانرێت شوێنەکەت بەدەست بهێنرێت. تکایە پەیوەندیەکەت بپشکنە و دووبارە هەوڵ بدەرەوە.',
         },
         search: {
-            welcome: 'بەخێربێیت بۆ دکتۆر فایندەر!'
+            welcome: 'بەخێربێیت بۆ دکتۆر فایندەر!',
+            searchPlaceholder: 'بەخێربێیت بۆ دکتۆر فایندەر!',
+            filters: {
+                all: 'بەخێربێیت بۆ دکتۆر فایندەر!',
+                available: 'بەخێربێیت بۆ دکتۆر فایندەر!',
+                topRated: 'بەخێربێیت بۆ دکتۆر فایندەر!',
+                nearest: 'بەخێربێیت بۆ دکتۆر فایندەر!',
+                title: 'تصفية النتائج',
+                specialty: 'التخصص',
+                availability: 'التوفر',
+                rating: 'التصنيف',
+                distance: 'المسافة',
+                apply: 'تطبيق التصفية',
+                reset: 'إعادة تعيين'
+            }
         },
         records: {
             welcome: 'بەخێربێیت بۆ دکتۆر فایندەر!'
         },
         navigation: {
             home: 'سەرەکی',
-            doctors: 'دکتۆرەکان',
+            doctors: 'خەريتە',
             search: 'گەڕان',
             records: 'تۆمارەکان',
             profile: 'پرۆفایل',

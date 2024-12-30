@@ -33,7 +33,7 @@ const getTabBarIcon = (routeName, focused) => {
             iconName = focused ? 'search' : 'search-outline';
             break;
         case 'Doctors':
-            iconName = focused ? 'medkit' : 'medkit-outline';
+            iconName = focused ? 'map' : 'map-outline';
             break;
         case 'Records':
             IconComponent = Icon;
@@ -244,7 +244,10 @@ const App = () => {
                     tabBar={props => !isKeyboardVisible && <CustomTabBar {...props} isLightTheme={isLightTheme} />}
                     screenOptions={{
                         headerShown: false,
+                        tabBarHideOnKeyboard: true,
+                        tabBarStyle: { display: isKeyboardVisible ? 'none' : 'flex' }
                     }}
+                    initialRouteName="Home"
                 >
                     <Tab.Screen 
                         name="Home" 
@@ -259,14 +262,18 @@ const App = () => {
                     <Tab.Screen 
                         name="Search" 
                         component={SearchScreen}
-                        options={{ tabBarLabel: t.search }}
+                        options={{ 
+                            tabBarLabel: t.search,
+                            unmountOnBlur: true
+                        }}
                     />
                     <Tab.Screen 
                         name="Records" 
                         component={HealthRecordsScreen}
                         options={{ 
                             tabBarLabel: t.records,
-                            tabBarIcon: ({ focused }) => getTabBarIcon('Records', focused)
+                            tabBarIcon: ({ focused }) => getTabBarIcon('Records', focused),
+                            unmountOnBlur: true
                         }}
                     />
                     <Tab.Screen 
@@ -280,6 +287,7 @@ const App = () => {
                         options={{ 
                             headerShown: false,
                             tabBarButton: () => null,
+                            unmountOnBlur: true
                         }}
                     />
                     <Tab.Screen 
@@ -287,7 +295,8 @@ const App = () => {
                         component={CategoryDetailsScreen}
                         options={{ 
                             tabBarButton: () => null,
-                            headerShown: false
+                            headerShown: false,
+                            unmountOnBlur: true
                         }}
                     />
                 </Tab.Navigator>

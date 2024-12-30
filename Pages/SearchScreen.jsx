@@ -40,22 +40,22 @@ export const SearchScreen = () => {
             doctors: [
                 {
                     id: 1,
-                    name: 'Dr. Sarah Johnson',
-                    specialty: 'Cardiologist',
+                    name: 'Dr. Halgord',
+                    specialty: 'یەکەمی عێراق',
                     rating: 4.8,
-                    isAvailable: true,
+                    isAvailable: false,
                     experience: '8 years',
-                    image: require('../assets/images/2.jpg'),
+                    image: require('../assets/images/22.jpg'),
                     nextAvailable: '2:30 PM Today'
                 },
                 {
                     id: 2,
-                    name: 'Dr. Michael Chen',
-                    specialty: 'Cardiologist',
+                    name: 'Dr. Ai',
+                    specialty: 'یەکەمی هەڵەبجە',
                     rating: 4.9,
                     isAvailable: false,
                     experience: '12 years',
-                    image: require('../assets/images/4.jpg'),
+                    image: require('../assets/images/44.jpg'),
                     nextAvailable: 'Tomorrow 10:00 AM'
                 },
                 {
@@ -65,7 +65,7 @@ export const SearchScreen = () => {
                     rating: 4.8,
                     isAvailable: true,
                     experience: '8 years',
-                    image: require('../assets/images/2.jpg'),
+                    image: require('../assets/images/11.jpg'),
                     nextAvailable: '2:30 PM Today'
                 },
                 {
@@ -75,7 +75,7 @@ export const SearchScreen = () => {
                     rating: 4.9,
                     isAvailable: false,
                     experience: '12 years',
-                    image: require('../assets/images/4.jpg'),
+                    image: require('../assets/images/44.jpg'),
                     nextAvailable: 'Tomorrow 10:00 AM'
                 },
             ]
@@ -86,32 +86,32 @@ export const SearchScreen = () => {
             doctors: [
                 {
                     id: 3,
-                    name: 'Dr. Emily Rodriguez',
-                    specialty: 'Neurologist',
+                    name: 'Dr. Vana',
+                    specialty: 'ووووووووووو',
                     rating: 4.7,
                     isAvailable: true,
                     experience: '10 years',
-                    image: require('../assets/images/2.jpg'),
+                    image: require('../assets/images/11.jpg'),
                     nextAvailable: '3:45 PM Today'
                 },
                 {
                     id: 4,
-                    name: 'Dr. James Wilson',
-                    specialty: 'Neurologist',
+                    name: 'Dr. Ranyei',
+                    specialty: 'Ranyei',
                     rating: 4.9,
                     isAvailable: true,
                     experience: '15 years',
-                    image: require('../assets/images/4.jpg'),
+                    image: require('../assets/images/55.jpg'),
                     nextAvailable: '1:15 PM Today'
                 },
                 {
                     id: 33,
-                    name: 'Dr. Sarah Johnson',
-                    specialty: 'Cardiologist',
+                    name: 'Dr. Bawar',
+                    specialty: '  صینی',
                     rating: 4.8,
                     isAvailable: true,
                     experience: '8 years',
-                    image: require('../assets/images/2.jpg'),
+                    image: require('../assets/images/33.jpg'),
                     nextAvailable: '2:30 PM Today'
                 },
                 {
