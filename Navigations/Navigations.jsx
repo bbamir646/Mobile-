@@ -10,7 +10,8 @@ import {SearchScreen} from '../Pages/SearchScreen';
 import {Maps} from '../Pages/Maps';
 import {HealthRecordsScreen} from '../Pages/ChatAi';
 import {ProfileScreen} from '../Pages/ProfileScreen';
-import SecondaryNavigation from './SecondaryNavigation';
+import LanguageScreen from '../Components/ProfileScreenComponents/LanguageScreen';
+import CategoryDetailsScreen from '../Components/HomeScreenComponent/CategoryDetailsScreen';
 
 import {SafeAreaView, StatusBar} from "react-native";
 import {useTheme} from "../DarkMode/ThemeContext";
@@ -219,6 +220,22 @@ const App = () => {
     const t = translations[currentLanguage].navigation;
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
+    useEffect(() => {
+        const keyboardWillShow = Keyboard.addListener(
+            Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+            () => setKeyboardVisible(true)
+        );
+        const keyboardWillHide = Keyboard.addListener(
+            Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+            () => setKeyboardVisible(false)
+        );
+
+        return () => {
+            keyboardWillShow.remove();
+            keyboardWillHide.remove();
+        };
+    }, []);
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar backgroundColor={isLightTheme ? '#ffffff' : '#1a1a1a'} barStyle={isLightTheme ? 'dark-content' : 'light-content'}/>
@@ -265,10 +282,21 @@ const App = () => {
                         options={{ tabBarLabel: t.profile }}
                     />
                     <Tab.Screen 
-                        name="SecondaryScreens"
-                        component={SecondaryNavigation}
-                        options={{
-                            tabBarButton: () => null
+                        name="Language" 
+                        component={LanguageScreen}
+                        options={{ 
+                            headerShown: false,
+                            tabBarButton: () => null,
+                            unmountOnBlur: true
+                        }}
+                    />
+                    <Tab.Screen 
+                        name="CategoryDetails" 
+                        component={CategoryDetailsScreen}
+                        options={{ 
+                            tabBarButton: () => null,
+                            headerShown: false,
+                            unmountOnBlur: true
                         }}
                     />
                 </Tab.Navigator>
