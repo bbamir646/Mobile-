@@ -4,6 +4,7 @@ import { useLanguage } from '../../DarkMode/LanguageContext';
 import { useTheme } from '../../DarkMode/ThemeContext';
 import { translations } from '../../translations';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useNavigation } from '@react-navigation/native';
 
 const languages = [
     {
@@ -29,6 +30,7 @@ const languages = [
 const LanguageScreen = () => {
     const { currentLanguage, changeLanguage } = useLanguage();
     const { theme } = useTheme();
+    const navigation = useNavigation();
     const isLightTheme = theme === 'light';
 
     return (
@@ -40,6 +42,18 @@ const LanguageScreen = () => {
             
             {/* Header */}
             <View style={[styles.header, { backgroundColor: isLightTheme ? '#fff' : '#2A2A2A' }]}>
+                <View style={styles.headerTop}>
+                    <TouchableOpacity 
+                        onPress={() => navigation.navigate('Profile')}
+                        style={styles.backButton}
+                    >
+                        <Icon 
+                            name="arrow-left" 
+                            size={24} 
+                            color={isLightTheme ? '#1a73e8' : '#64B5F6'} 
+                        />
+                    </TouchableOpacity>
+                </View>
                 <Icon name="translate" size={32} color={isLightTheme ? '#1a73e8' : '#64B5F6'} />
                 <Text style={[styles.headerTitle, { color: isLightTheme ? '#000' : '#fff' }]}>
                     {translations[currentLanguage].profile.language}
@@ -140,6 +154,16 @@ const styles = StyleSheet.create({
     nativeName: {
         fontSize: 14,
         marginTop: 2,
+    },
+    headerTop: {
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    backButton: {
+        padding: 8,
+        borderRadius: 20,
     },
 });
 
