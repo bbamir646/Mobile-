@@ -104,25 +104,25 @@ export const HealthRecordsScreen = () => {
         }).start();
     }, []);
 
-    useEffect(() => {
-        const keyboardWillShow = Keyboard.addListener(Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow', (e) => {
-            setKeyboardHeight(e.endCoordinates.height);
-            if (messages.length > 0) {
-                scrollToLatest();
-            }
-        });
-        const keyboardWillHide = Keyboard.addListener(Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide', () => {
-            setKeyboardHeight(0);
-            if (messages.length > 0) {
-                scrollToLatest();
-            }
-        });
+    // useEffect(() => {
+    //     const keyboardWillShow = Keyboard.addListener(Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow', (e) => {
+    //         setKeyboardHeight(e.endCoordinates.height);
+    //         if (messages.length > 0) {
+    //             scrollToLatest();
+    //         }
+    //     });
+    //     const keyboardWillHide = Keyboard.addListener(Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide', () => {
+    //         setKeyboardHeight(0);
+    //         if (messages.length > 0) {
+    //             scrollToLatest();
+    //         }
+    //     });
 
-        return () => {
-            keyboardWillShow.remove();
-            keyboardWillHide.remove();
-        };
-    }, [messages.length]);
+    //     return () => {
+    //         keyboardWillShow.remove();
+    //         keyboardWillHide.remove();
+    //     };
+    // }, [messages.length]);
 
     const toggleHistory = () => {
         setIsHistoryVisible(!isHistoryVisible);
@@ -345,7 +345,8 @@ export const HealthRecordsScreen = () => {
         }
     }, [isTyping]);
 
-    return (<View style={[
+    return (
+    <View style={[
         styles.container,
         {backgroundColor: isLightTheme ? '#fff' : '#1A1A1A'}
     ]}>

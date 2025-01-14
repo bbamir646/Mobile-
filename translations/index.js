@@ -121,7 +121,7 @@ export const translations = {
             home: 'الرئيسية',
             doctors: 'الخريطة',
             search: 'البحث',
-            records: 'السجلات',
+            records: 'ChatAi',
             profile: 'الملف الشخصي',
             language: 'اللغة'
         },
@@ -186,9 +186,9 @@ export const translations = {
         },
         navigation: {
             home: 'سەرەکی',
-            doctors: 'خەريتە',
+            doctors: 'نەخشە',
             search: 'گەڕان',
-            records: 'تۆمارەکان',
+            records: 'ChatAi',
             profile: 'پرۆفایل',
             language: 'زمان'
         },
