@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Image, Dimensions } from 'react-native';
-import { useTheme } from "../DarkMode/ThemeContext";
+import { useTheme } from "../../DarkMode/ThemeContext";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 
@@ -18,7 +18,7 @@ const CategoryDetailsScreen = ({ route }) => {
             specialty: category.name,
             rating: 4.8,
             experience: '8 years',
-            image: require('../assets/images/2.jpg'),
+            image: require('../../assets/images/2.jpg'),
         },
         {
             id: 2,
@@ -26,7 +26,7 @@ const CategoryDetailsScreen = ({ route }) => {
             specialty: category.name,
             rating: 4.9,
             experience: '12 years',
-            image: require('../assets/images/4.jpg'),
+            image: require('../../assets/images/4.jpg'),
         },
         {
             id: 3,
@@ -34,7 +34,7 @@ const CategoryDetailsScreen = ({ route }) => {
             specialty: category.name, 
             rating: 4.7,
             experience: '10 years',
-            image: require('../assets/images/3.jpg'),
+            image: require('../../assets/images/3.jpg'),
         }
     ];
 

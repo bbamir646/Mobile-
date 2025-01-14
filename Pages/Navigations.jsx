@@ -7,11 +7,11 @@ import { useState, useEffect, useRef } from 'react';
 
 import HomeScreen from './HomeScreen';
 import {SearchScreen} from './SearchScreen';
-import {DoctorsScreen} from './DoctorsScreen';
+import {Maps} from './Maps';
 import {HealthRecordsScreen} from './ChatAi';
 import {ProfileScreen} from './ProfileScreen';
 import LanguageScreen from './LanguageScreen';
-import CategoryDetailsScreen from '../HomeScreenComponent/CategoryDetailsScreen';
+import CategoryDetailsScreen from '../Components/HomeScreenComponent/CategoryDetailsScreen';
 
 import {SafeAreaView, StatusBar} from "react-native";
 import {useTheme} from "../DarkMode/ThemeContext";
@@ -256,7 +256,7 @@ const App = () => {
                     />
                     <Tab.Screen 
                         name="Doctors" 
-                        component={DoctorsScreen}
+                        component={Maps}
                         options={{ tabBarLabel: t.doctors }}
                     />
                     <Tab.Screen 

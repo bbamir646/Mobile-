@@ -8,7 +8,7 @@ import { translations } from '../translations';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 
-export const DoctorsScreen = () => {
+export const Maps = () => {
     const { theme } = useTheme();
     const { currentLanguage } = useLanguage();
     const isLightTheme = theme === 'light';
@@ -532,4 +532,4 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '600',
     },
-});
+}); 
