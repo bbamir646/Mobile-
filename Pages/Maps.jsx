@@ -379,12 +379,40 @@ export const Maps = () => {
                     styles.loadingContainer,
                     { backgroundColor: isLightTheme ? '#fff' : '#333' }
                 ]}>
-                    <Text style={[
-                        styles.loadingText,
-                        { color: isLightTheme ? '#333' : '#fff' }
+                    <View style={[
+                        styles.loadingCard,
+                        { backgroundColor: isLightTheme ? '#ffffff' : '#424242' }
                     ]}>
-                        {errorMsg || (doctors.length === 0 ? 'No doctors found' : t.loadingMap)}
-                    </Text>
+                        <View style={styles.loadingIconContainer}>
+                            <Icon 
+                                name={errorMsg ? "map-marker-alert" : "map-marker-radius"} 
+                                size={50} 
+                                color={errorMsg ? "#FF5252" : "#1a73e8"}
+                            />
+                        </View>
+                        <Text style={[
+                            styles.loadingText,
+                            { color: isLightTheme ? '#333' : '#fff' }
+                        ]}>
+                            {errorMsg || (doctors.length === 0 ? 'No doctors found' : t.loadingMap)}
+                        </Text>
+                        {errorMsg && (
+                            <TouchableOpacity 
+                                style={styles.enableLocationButton}
+                                onPress={async () => {
+                                    let { status } = await Location.requestForegroundPermissionsAsync();
+                                    if (status === 'granted') {
+                                        setErrorMsg(null);
+                                        const locationResult = await Location.getCurrentPositionAsync({});
+                                        setLocation(locationResult);
+                                    }
+                                }}
+                            >
+                                <Icon name="location-enter" size={20} color="#fff" style={styles.buttonIcon} />
+                                <Text style={styles.enableLocationText}>Enable Location</Text>
+                            </TouchableOpacity>
+                        )}
+                    </View>
                 </View>
             )}
         </View>
@@ -456,9 +484,53 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        padding: 20,
+    },
+    loadingCard: {
+        width: '100%',
+        maxWidth: 340,
+        padding: 24,
+        borderRadius: 16,
+        alignItems: 'center',
+        ...Platform.select({
+            ios: {
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 8,
+            },
+            android: {
+                elevation: 4,
+            },
+        }),
+    },
+    loadingIconContainer: {
+        marginBottom: 16,
     },
     loadingText: {
         fontSize: 16,
+        textAlign: 'center',
+        marginBottom: 20,
+        lineHeight: 24,
+    },
+    enableLocationButton: {
+        backgroundColor: '#1a73e8',
+        paddingHorizontal: 20,
+        paddingVertical: 12,
+        borderRadius: 12,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        maxWidth: 200,
+    },
+    buttonIcon: {
+        marginRight: 8,
+    },
+    enableLocationText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: '600',
     },
     doctorCard: {
         position: 'absolute',
