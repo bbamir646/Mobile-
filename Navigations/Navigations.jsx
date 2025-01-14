@@ -5,12 +5,12 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Keyboard, Platform, Animated, Pressable, View, Text } from 'react-native';
 import { useState, useEffect, useRef } from 'react';
 
-import HomeScreen from './HomeScreen';
-import {SearchScreen} from './SearchScreen';
-import {Maps} from './Maps';
-import {HealthRecordsScreen} from './ChatAi';
-import {ProfileScreen} from './ProfileScreen';
-import LanguageScreen from './LanguageScreen';
+import HomeScreen from '../Pages/HomeScreen';
+import {SearchScreen} from '../Pages/SearchScreen';
+import {Maps} from '../Pages/Maps';
+import {HealthRecordsScreen} from '../Pages/ChatAi';
+import {ProfileScreen} from '../Pages/ProfileScreen';
+import LanguageScreen from '../Components/ProfileScreenComponents/LanguageScreen';
 import CategoryDetailsScreen from '../Components/HomeScreenComponent/CategoryDetailsScreen';
 
 import {SafeAreaView, StatusBar} from "react-native";
@@ -305,4 +305,4 @@ const App = () => {
     );
 };
 
-export default App;
+export default App; 
