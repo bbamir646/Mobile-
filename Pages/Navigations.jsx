@@ -11,7 +11,7 @@ import {DoctorsScreen} from './DoctorsScreen';
 import {HealthRecordsScreen} from './ChatAi';
 import {ProfileScreen} from './ProfileScreen';
 import LanguageScreen from './LanguageScreen';
-import CategoryDetailsScreen from './CategoryDetailsScreen';
+import CategoryDetailsScreen from '../HomeScreenComponent/CategoryDetailsScreen';
 
 import {SafeAreaView, StatusBar} from "react-native";
 import {useTheme} from "../DarkMode/ThemeContext";
