@@ -1,38 +1,87 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, StatusBar, Image } from 'react-native';
 import { useLanguage } from '../../DarkMode/LanguageContext';
 import { useTheme } from '../../DarkMode/ThemeContext';
 import { translations } from '../../translations';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+const languages = [
+    {
+        code: 'en',
+        name: 'English',
+        nativeName: 'English',
+        icon: 'web'
+    },
+    {
+        code: 'ar',
+        name: 'Arabic',
+        nativeName: 'العربية',
+        icon: 'web'
+    },
+    {
+        code: 'ckb',
+        name: 'Kurdish-Sorani',
+        nativeName: 'کوردی-سۆرانی',
+        icon: 'web'
+    }
+];
 
 const LanguageScreen = () => {
-    const { language, setLanguage } = useLanguage();
+    const { currentLanguage, changeLanguage } = useLanguage();
     const { theme } = useTheme();
+    const isLightTheme = theme === 'light';
 
     return (
-        <View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
-            <TouchableOpacity 
-                style={[styles.languageButton, { 
-                    backgroundColor: language === 'en' ? theme.primary : theme.backgroundColor,
-                    borderColor: theme.primary
-                }]} 
-                onPress={() => setLanguage('en')}
-            >
-                <Text style={[styles.buttonText, { color: language === 'en' ? theme.backgroundColor : theme.textColor }]}>
-                    English
+        <View style={[styles.container, { backgroundColor: isLightTheme ? '#f5f5f5' : '#1A1A1A' }]}>
+            <StatusBar
+                backgroundColor={isLightTheme ? '#ffffff' : '#1a1a1a'}
+                barStyle={isLightTheme ? 'dark-content' : 'light-content'}
+            />
+            
+            {/* Header */}
+            <View style={[styles.header, { backgroundColor: isLightTheme ? '#fff' : '#2A2A2A' }]}>
+                <Icon name="translate" size={32} color={isLightTheme ? '#1a73e8' : '#64B5F6'} />
+                <Text style={[styles.headerTitle, { color: isLightTheme ? '#000' : '#fff' }]}>
+                    {translations[currentLanguage].profile.language}
                 </Text>
-            </TouchableOpacity>
+                <Text style={[styles.headerSubtitle, { color: isLightTheme ? '#666' : '#aaa' }]}>
+                    {translations[currentLanguage].profile.languageSubtitle}
+                </Text>
+            </View>
 
-            <TouchableOpacity 
-                style={[styles.languageButton, { 
-                    backgroundColor: language === 'ar' ? theme.primary : theme.backgroundColor,
-                    borderColor: theme.primary
-                }]} 
-                onPress={() => setLanguage('ar')}
-            >
-                <Text style={[styles.buttonText, { color: language === 'ar' ? theme.backgroundColor : theme.textColor }]}>
-                    العربية
-                </Text>
-            </TouchableOpacity>
+            {/* Language List */}
+            <View style={styles.languageList}>
+                {languages.map((lang) => (
+                    <TouchableOpacity
+                        key={lang.code}
+                        style={[
+                            styles.languageItem,
+                            { backgroundColor: isLightTheme ? '#fff' : '#2A2A2A' }
+                        ]}
+                        onPress={() => changeLanguage(lang.code)}
+                    >
+                        <View style={styles.languageInfo}>
+                            <Icon 
+                                name={lang.icon} 
+                                size={24} 
+                                color={isLightTheme ? '#1a73e8' : '#64B5F6'} 
+                                style={styles.languageIcon}
+                            />
+                            <View>
+                                <Text style={[styles.languageName, { color: isLightTheme ? '#000' : '#fff' }]}>
+                                    {lang.name}
+                                </Text>
+                                <Text style={[styles.nativeName, { color: isLightTheme ? '#666' : '#aaa' }]}>
+                                    {lang.nativeName}
+                                </Text>
+                            </View>
+                        </View>
+                        {currentLanguage === lang.code && (
+                            <Icon name="check" size={24} color={isLightTheme ? '#1a73e8' : '#64B5F6'} />
+                        )}
+                    </TouchableOpacity>
+                ))}
+            </View>
         </View>
     );
 };
@@ -40,21 +89,57 @@ const LanguageScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    header: {
         padding: 20,
-        justifyContent: 'center',
+        alignItems: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(0, 0, 0, 0.1)',
+        elevation: 2,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+    },
+    headerTitle: {
+        fontSize: 24,
+        fontWeight: '600',
+        marginTop: 12,
+    },
+    headerSubtitle: {
+        fontSize: 14,
+        marginTop: 4,
+    },
+    languageList: {
+        padding: 16,
+    },
+    languageItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: 16,
+        marginBottom: 12,
+        borderRadius: 12,
+        elevation: 2,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+    },
+    languageInfo: {
+        flexDirection: 'row',
         alignItems: 'center',
     },
-    languageButton: {
-        width: '80%',
-        padding: 15,
-        borderRadius: 10,
-        marginVertical: 10,
-        borderWidth: 1,
-        alignItems: 'center',
+    languageIcon: {
+        marginRight: 12,
     },
-    buttonText: {
+    languageName: {
         fontSize: 16,
         fontWeight: '500',
+    },
+    nativeName: {
+        fontSize: 14,
+        marginTop: 2,
     },
 });
 
