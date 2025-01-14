@@ -36,102 +36,10 @@ export const SearchScreen = () => {
     const categories = [
         {
             id: 1,
-            name: 'Cardiology',
+            name: 'Neurology',
             doctors: [
                 {
                     id: 1,
-                    name: 'Dr. Halgord',
-                    specialty: 'یەکەمی عێراق',
-                    rating: 4.8,
-                    isAvailable: false,
-                    experience: '8 years',
-                    image: require('../assets/images/22.jpg'),
-                    nextAvailable: '2:30 PM Today'
-                },
-                {
-                    id: 2,
-                    name: 'Dr. Ai',
-                    specialty: 'یەکەمی هەڵەبجە',
-                    rating: 4.9,
-                    isAvailable: false,
-                    experience: '12 years',
-                    image: require('../assets/images/44.jpg'),
-                    nextAvailable: 'Tomorrow 10:00 AM'
-                },
-                {
-                    id: 11,
-                    name: 'Dr. Sarah Johnson',
-                    specialty: 'Cardiologist',
-                    rating: 4.8,
-                    isAvailable: true,
-                    experience: '8 years',
-                    image: require('../assets/images/11.jpg'),
-                    nextAvailable: '2:30 PM Today'
-                },
-                {
-                    id: 22,
-                    name: 'Dr. Michael Chen',
-                    specialty: 'Cardiologist',
-                    rating: 4.9,
-                    isAvailable: false,
-                    experience: '12 years',
-                    image: require('../assets/images/44.jpg'),
-                    nextAvailable: 'Tomorrow 10:00 AM'
-                },
-            ]
-        },
-        {
-            id: 2,
-            name: 'Neurology',
-            doctors: [
-                {
-                    id: 3,
-                    name: 'Dr. Vana',
-                    specialty: 'ووووووووووو',
-                    rating: 4.7,
-                    isAvailable: true,
-                    experience: '10 years',
-                    image: require('../assets/images/11.jpg'),
-                    nextAvailable: '3:45 PM Today'
-                },
-                {
-                    id: 4,
-                    name: 'Dr. Ranyei',
-                    specialty: 'Ranyei',
-                    rating: 4.9,
-                    isAvailable: true,
-                    experience: '15 years',
-                    image: require('../assets/images/55.jpg'),
-                    nextAvailable: '1:15 PM Today'
-                },
-                {
-                    id: 33,
-                    name: 'Dr. Bawar',
-                    specialty: '  صینی',
-                    rating: 4.8,
-                    isAvailable: true,
-                    experience: '8 years',
-                    image: require('../assets/images/33.jpg'),
-                    nextAvailable: '2:30 PM Today'
-                },
-                {
-                    id: 44,
-                    name: 'Dr. Michael Chen',
-                    specialty: 'Cardiologist',
-                    rating: 4.9,
-                    isAvailable: false,
-                    experience: '12 years',
-                    image: require('../assets/images/4.jpg'),
-                    nextAvailable: 'Tomorrow 10:00 AM'
-                },
-            ]
-        },
-        {
-            id: 3,
-            name: 'Neurology',
-            doctors: [
-                {
-                    id: 4,
                     name: 'Dr. Emily Rodriguez',
                     specialty: 'Neurologist',
                     rating: 4.7,
@@ -141,7 +49,99 @@ export const SearchScreen = () => {
                     nextAvailable: '3:45 PM Today'
                 },
                 {
+                    id: 2,
+                    name: 'Dr. James Wilson',
+                    specialty: 'Neurologist',
+                    rating: 4.9,
+                    isAvailable: true,
+                    experience: '15 years',
+                    image: require('../assets/images/4.jpg'),
+                    nextAvailable: '1:15 PM Today'
+                },
+                {
+                    id: 12,
+                    name: 'Dr. Emily Rodriguez',
+                    specialty: 'Neurologist',
+                    rating: 4.7,
+                    isAvailable: true,
+                    experience: '10 years',
+                    image: require('../assets/images/2.jpg'),
+                    nextAvailable: '3:45 PM Today'
+                },
+                {
+                    id: 21,
+                    name: 'Dr. James Wilson',
+                    specialty: 'Neurologist',
+                    rating: 4.9,
+                    isAvailable: true,
+                    experience: '15 years',
+                    image: require('../assets/images/4.jpg'),
+                    nextAvailable: '1:15 PM Today'
+                },
+            ]
+        },
+        {
+            id: 2,
+            name: 'Neurology',
+            doctors: [
+                {
+                    id: 3,
+                    name: 'Dr. Emily Rodriguez',
+                    specialty: 'Neurologist',
+                    rating: 4.7,
+                    isAvailable: true,
+                    experience: '10 years',
+                    image: require('../assets/images/2.jpg'),
+                    nextAvailable: '3:45 PM Today'
+                },
+                {
+                    id: 4,
+                    name: 'Dr. James Wilson',
+                    specialty: 'Neurologist',
+                    rating: 4.9,
+                    isAvailable: true,
+                    experience: '15 years',
+                    image: require('../assets/images/4.jpg'),
+                    nextAvailable: '1:15 PM Today'
+                },
+                {
+                    id: 9,
+                    name: 'Dr. Emily Rodriguez',
+                    specialty: 'Neurologist',
+                    rating: 4.7,
+                    isAvailable: true,
+                    experience: '10 years',
+                    image: require('../assets/images/2.jpg'),
+                    nextAvailable: '3:45 PM Today'
+                },
+                {
+                    id: 10,
+                    name: 'Dr. James Wilson',
+                    specialty: 'Neurologist',
+                    rating: 4.9,
+                    isAvailable: true,
+                    experience: '15 years',
+                    image: require('../assets/images/4.jpg'),
+                    nextAvailable: '1:15 PM Today'
+                },
+            ]
+        },
+        {
+            id: 3,
+            name: 'Neurology',
+            doctors: [
+                {
                     id: 5,
+                    name: 'Dr. Emily Rodriguez',
+                    specialty: 'Neurologist',
+                    rating: 4.7,
+                    isAvailable: true,
+                    experience: '10 years',
+                    image: require('../assets/images/2.jpg'),
+                    nextAvailable: '3:45 PM Today'
+                },
+                {
+                    id: 6,
                     name: 'Dr. James Wilson',
                     specialty: 'Neurologist',
                     rating: 4.9,
