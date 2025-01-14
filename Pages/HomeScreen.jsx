@@ -17,9 +17,9 @@ const categories = [
 ]
 
 const topDoctors = [
-  { id: 1, name: 'Dr. John Doe', specialty: 'Cardiologist', rating: 4.9, image: require('../assets/images/2.jpg') },
-  { id: 2, name: 'Dr. Jane Smith', specialty: 'Neurologist', rating: 4.8, image: require('../assets/images/22.jpg') },
-  { id: 3, name: 'Dr. Mike Johnson', specialty: 'Pediatrician', rating: 4.7, image: require('../assets/images/33.jpg') },
+  { id: 1, name: 'Dr. John Doe', specialty: 'Cardiologist', rating: 4.9, image: require('../assets/images/1.png') },
+  { id: 2, name: 'Dr. Jane Smith', specialty: 'Neurologist', rating: 4.8, image: require('../assets/images/2.jpg') },
+  { id: 3, name: 'Dr. Mike Johnson', specialty: 'Pediatrician', rating: 4.7, image: require('../assets/images/3.jpg') },
 ]
 
 const upcomingAppointments = [
